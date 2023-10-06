@@ -34,3 +34,8 @@ jobs:
         with:
           name: Package
           path: staging
+
+  Deploy_AWS_EC2:
+      needs: build
+      uses: ./.github/workflows/deploy_aws_ec2.yml
+      secrets: inherit

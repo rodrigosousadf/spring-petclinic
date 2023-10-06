@@ -1,0 +1,26 @@
+name: Push-to-ECS
+
+on:
+  workflow_call:
+
+env:
+  AWS_REGION : "east-2"
+
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read    # This is required for actions/checkout
+
+jobs:
+
+  ECS:
+    runs-on: ubuntu-latest
+    steps:
+    
+    - name: configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::462742955383:role/Github_actions_acess
+        role-session-name: samplerolesession
+        role-duration-seconds: 900 # o TTL da sessão, em segundos.
+        aws-region: ${{ env.AWS_REGION }}
+    # 👇 Agora você pode executar comandos que usarão a suas credenciais
