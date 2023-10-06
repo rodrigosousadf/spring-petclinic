@@ -37,10 +37,10 @@ jobs:
 
   docker:
     needs: build
-    uses: ./github/workflows/docker.yml
+    uses: .github/workflows/docker.yml
     secrets: inherit
 
   Deploy_AWS_ECS:
       needs: docker
-      uses: ./github/workflows/deploy_aws_ecs.yml
+      uses: .github/workflows/deploy_aws_ecs.yml
       secrets: inherit
