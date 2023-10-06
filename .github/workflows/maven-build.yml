@@ -25,9 +25,12 @@ jobs:
           java-version: ${{matrix.java}}
           distribution: 'adopt'
           cache: maven
-          
-      - name: Run the Maven verify phase
-        run: mvn --batch-mode --update-snapshots verify
 
       - name: Build with Maven Wrapper
         run: ./mvnw -B package
+
+      - run: mkdir staging && cp target/*.jar staging
+      - uses: actions/upload-artifact@v3
+        with:
+          name: Package
+          path: staging
