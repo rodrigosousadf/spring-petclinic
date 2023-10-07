@@ -28,6 +28,6 @@ jobs:
       uses: docker/build-push-action@v4.0.0
       with:
         context: .
-        file: ./docker-compose.yml
+        file: ./dockerfile
         push: true
-        tags: rodrigosousadf/petclinic:${{github.run_number}}
+        tags: rodrigosousadf/javapet:${{github.run_number}}
