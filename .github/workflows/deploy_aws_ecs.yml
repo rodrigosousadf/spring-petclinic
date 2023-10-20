@@ -1,9 +1,13 @@
-name: Push-to-ECS
+name: Deploy to AWS ECS
 
 on:
-  push:
-    branches:
-      - main
+  workflow_call:
+    inputs:
+      action: 'deploy-aws-ecs'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
 
 env:
   AWS_REGION: "east-1"
