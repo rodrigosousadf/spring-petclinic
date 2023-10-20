@@ -1,23 +1,19 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Java CI with Maven
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '17' ]
+        java: ['17']
 
-   steps:
+    steps:
       - name: Check out code
         uses: actions/checkout@v2
 
@@ -38,12 +34,12 @@ jobs:
           name: Package
           path: staging
 
-docker:
-  needs: build
-  uses: ./.github/workflows/docker.yml
-  secrets: inherit
-        
-Deploy_AWS_ECS:
-  needs: docker
-  uses: ./.github/workflows/deploy_aws_ecs.yml
-  secrets: inherit
+  docker:
+    needs: build
+    uses: ./.github/workflows/docker.yml
+    secrets: inherit
+
+  Deploy_AWS_ECS:
+    needs: docker
+    uses: ./.github/workflows/deploy_aws_ecs.yml
+    secrets: inherit
