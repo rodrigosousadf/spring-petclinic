@@ -41,5 +41,5 @@ jobs:
 
   Deploy_AWS_ECS:
     needs: docker
-    uses: ./.github/workflows/deployawsecs.yml
+    uses: ./.github/workflows/deployecs.yml
     secrets: inherit
