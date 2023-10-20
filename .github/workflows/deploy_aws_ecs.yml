@@ -1,9 +1,7 @@
 name: Deploy to AWS ECS
 
 on:
-  workflow_call:
-    inputs:
-      action: 'deploy-aws-ecs'
+  workflow_call: 
 
 jobs:
   deploy:
