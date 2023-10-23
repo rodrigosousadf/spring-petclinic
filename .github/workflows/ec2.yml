@@ -1,57 +1,49 @@
-name: Docker EC2 Deploy
+name: Push-to-EC2
 
+# Trigger deployment only on push to master branch
 on:
-  push:
-    branches:
-      - main
+ workflow_call: 
 
 jobs:
   deploy:
+    name: Deploy to EC2 on master branch push
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Add EC2 instance to known_hosts
-        env:
-          PUBLIC_KEY: $\{{ secrets.PUBLIC_KEY }}
-        run: |
-          mkdir -p ~/.ssh
-          chmod 700 ~/.ssh
-          echo $PUBLIC_KEY >> ~/.ssh/known_hosts
+      - name: Connect to EC2 via SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Setting private key
-        env:
-          PRIVATE_KEY: $\{{ secrets.DEPLOY_KEY }}
+      - name: Stop and remove existing Docker container
         run: |
-          echo "$PRIVATE_KEY" > /tmp/private_key.pem
-          chmod 600 /tmp/private_key.pem
+          ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker stop hello-container"
+          ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker rm hello-container"
 
-      - name: Copy repository files to EC2
-        env:
-          HOST: $\{{ secrets.HOST }}
-          USER: $\{{ secrets.USER }}
-        run: |
-          ssh -i /tmp/private_key.pem $USER@$HOST "mkdir -p ~/app"
-          scp -i /tmp/private_key.pem -r ./* $USER@$HOST:~/app
+      - name: Pull Docker image from Docker Hub
+        run: docker pull rodrigosousa/javapet:latest
 
-      - name: Build Docker image and run container on EC2
-        env:
-          HOST: $\{{ secrets.HOST }}
-          USER: $\{{ secrets.USER }}
-        run: |        
-          ssh -i /tmp/private_key.pem $USER@$HOST "\
-          cd ~/app \
-          && (docker ps -q | xargs -r docker container rm -f ) \
-          && (docker images -q | xargs -r docker rmi -f) \
-          && docker build -t hello . \
-          && docker run -d -p 80:80 --name hello-container hello"
-
-      - name: Cleanup
-        env:
-          HOST: $\{{ secrets.HOST }}
-          USER: $\{{ secrets.USER }}
-        run: |
-          ssh -i /tmp/private_key.pem $USER@$HOST "rm -rf ~/app"
-          rm -f /tmp/private_key.pem
+      - name: Run Docker container
+        run: docker run -d -p 80:80 --name hello-container your-docker-hub-image:tag
+    
+    #   - name: Deploy to Server
+    #     uses: easingthemes/ssh-deploy@main
+    #     env:
+    #       SSH_PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }} # EC2_SSH_KEY: This will be your .pem file which you will use to login to the instance
+    #       REMOTE_HOST: ${{ secrets.HOST_DNS }} #HOST_DNS: Public DNS record of the instance, it will look something like this ec2-xx-xxx-xxx-xxx.us-west-2.compute.amazonaws.com
+    #       REMOTE_USER: ${{ secrets.USERNAME }} # USERNAME: Will be the username of the EC2 instance, usually ubuntu
+    #       TARGET: /home/${{ secrets.REMOTE_USER }} # TARGET_DIR: Is where you want to deploy your code.
+    
+    #   - name: Executing remote ssh commands using ssh key
+    #     uses: appleboy/ssh-action@master
+    #     with:
+    #         host: ${{ secrets.HOST_DNS }}
+    #         username: ${{ secrets.USERNAME }}
+    #         key: ${{ secrets.EC2_SSH_KEY }}
+    #         script: |
+           
