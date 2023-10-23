@@ -26,7 +26,7 @@ jobs:
           ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker rm hello-container"
 
       - name: Pull Docker image from Docker Hub
-        run: docker pull rodrigosousa/javapet:latest
+        run: docker pull rodrigosousadf/javapet:latest
 
       - name: Run Docker container
         run: docker run -d -p 80:80 --name hello-container your-docker-hub-image:tag
