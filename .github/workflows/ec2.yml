@@ -29,7 +29,7 @@ jobs:
         run: docker pull rodrigosousadf/javapet:${{github.run_number}}
 
       - name: Run Docker container
-        run: docker run -d -p 80:80 --name hello-container your-docker-hub-image:tag
+        run: docker run -d -p 80:80 --name hello-container rodrigosousadf/javapet:${{github.run_number}}
     
     #   - name: Deploy to Server
     #     uses: easingthemes/ssh-deploy@main
