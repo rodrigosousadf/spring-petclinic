@@ -25,6 +25,15 @@ jobs:
       #     ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker stop hello-container"
       #     ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker rm hello-container"
 
+      - name: Install and run docker service
+        run:
+          |
+          sudo yum update -y
+          sudo yum install docker -y
+          sudo service docker start
+          docker stop hello-container
+          docker rm hello-container
+
       - name: Pull Docker image from Docker Hub
         run: docker pull rodrigosousadf/javapet:${{github.run_number}}
 
