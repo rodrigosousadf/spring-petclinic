@@ -28,9 +28,9 @@ jobs:
       - name: Install and run docker service
         run:
           |
-          sudo yum update -y
-          sudo yum install docker -y
-          sudo service docker start
+          yum update -y
+          yum install docker -y
+          zservice docker start
           docker stop hello-container
           docker rm hello-container
 
