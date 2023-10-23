@@ -20,10 +20,10 @@ jobs:
           username: ${{ secrets.USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Stop and remove existing Docker container
-        run: |
-          ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker stop hello-container"
-          ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker rm hello-container"
+      # - name: Stop and remove existing Docker container
+      #   run: |
+      #     ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker stop hello-container"
+      #     ssh ${{ secrets.USER }}@${{ secrets.HOST }} "docker rm hello-container"
 
       - name: Pull Docker image from Docker Hub
         run: docker pull rodrigosousadf/javapet:latest
