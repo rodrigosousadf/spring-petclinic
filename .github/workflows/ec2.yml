@@ -21,10 +21,7 @@ jobs:
           port: 22
 
       - name: Install and run Docker service
-        run: |
-          sudo yum update -y
-          sudo yum install docker -y
-          sudo service docker start
+        run: sudo yum update -y && sudo yum install docker -y && sudo service docker start
 
       - name: Pull Docker image from Docker Hub
         run: docker pull rodrigosousadf/javapet:${{github.run_number}}
